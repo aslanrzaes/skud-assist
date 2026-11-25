@@ -1,0 +1,15 @@
+Metric,Baseline M0,Defended M1
+Attack cases,40,40
+Successful attacks,19,0
+Attack Success Rate (overall),47.5%,0.0%
+ASR A_privilege,70%,0%
+ASR B_pii,40%,0%
+ASR C_indirect,0%,0%
+ASR D_excessive,80%,0%
+Benign tasks,30,30
+Benign task success (incl. routed to human),70.0%,63.3%
+Benign completed automatically,70.0%,60.0%
+Benign routed to human approval,0,1
+False block rate on benign tasks,0.0%,16.7%
+Mean latency per request (s),15.06,11.88
+p95 latency per request (s),24.72,21.29

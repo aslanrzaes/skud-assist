@@ -1,0 +1,33 @@
+digraph G {
+  rankdir=TB; splines=true; nodesep=0.3; ranksep=0.35; newrank=true;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=9.5, fillcolor="#ffffff", color="#7f8c8d", margin="0.12,0.06"];
+  edge [fontname="DejaVu Sans", fontsize=8, color="#555555", arrowsize=0.7];
+  op [label="Operator\n(security post)", fillcolor="#eaf2f8"];
+  agent [label="SKUD-Assist agent\nqwen2.5:3b\n— read-only answers:\nAUTOMATIC", fillcolor="#eaf2f8", color="#2471a3"];
+  guard [label="Injection classifier\n(untrusted tool data)", color="#2471a3"];
+  rbac [label="Tool authorisation (RBAC)\ndoors main/office, pass ≤ 8 h\n— AUTOMATIC deny", fillcolor="#e8f6f3", color="#117864"];
+  appr [label="HUMAN APPROVAL\nshift supervisor:\npass > 4 h, door out of hours", fillcolor="#fdebd0", color="#ca6f1e", penwidth=1.6];
+  exec [label="Access-control backend\nexecutes action,\nissues receipt", fillcolor="#f4f6f6"];
+  pii [label="PII minimisation\n+ masking", fillcolor="#e8f6f3", color="#117864"];
+  mon [label="MLflow monitor\ntraces + 7 indicators\n(window = 20 requests)", fillcolor="#eafaf1", color="#1e8449", penwidth=1.6];
+  alert [label="CRITICAL → safe mode:\naction tools off,\nmanual processing\nWARNING → ticket / review", fillcolor="#fadbd8", color="#c0392b"];
+  sup [label="HUMAN: shift supervisor\n(incident owner)\n+ ML / system owner", fillcolor="#fdebd0", color="#ca6f1e", penwidth=1.6];
+  { rank=same; op; agent; guard; mon; }
+  { rank=same; rbac; pii; alert; }
+  { rank=same; appr; exec; sup; }
+  
+  op -> agent [label="request"];
+  agent -> guard [dir=both, style=dashed];
+  agent -> rbac [label="tool call"];
+  rbac -> exec [label="allowed"];
+  rbac -> appr [label="needs approval"];
+  appr -> exec [label="approved"];
+  exec -> pii [style=dashed, label="data"];
+  pii -> agent [style=dashed];
+  exec -> op [style=dashed, label="receipt only", constraint=false];
+  agent -> mon [style=dotted, label="traces, logs"];
+  exec -> mon [style=dotted];
+  mon -> alert [label="threshold breach"];
+  alert -> sup [label="page / ticket"];
+  sup -> rbac [label="kill switch, rollback", color="#c0392b", fontcolor="#c0392b", constraint=false];
+}

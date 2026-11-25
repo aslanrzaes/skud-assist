@@ -1,0 +1,3 @@
+sentencepiece
+protobuf
+garak==0.17.1
